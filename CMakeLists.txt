@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 
 project(l5)
 
-# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-# find_package(GMP REQUIRED)
-
 add_executable(l5 main.cpp)
 
 set_target_properties(l5 PROPERTIES
@@ -13,6 +10,7 @@ set_target_properties(l5 PROPERTIES
   COMPILE_OPTIONS -Wpedantic -Wall -Wextra
 )
 
-# target_link_libraries(l5 gmp)
+configure_file("${PROJECT_SOURCE_DIR}/1.txt" "${PROJECT_BINARY_DIR}/1.txt" COPYONLY)
+configure_file("${PROJECT_SOURCE_DIR}/shuffle.txt" "${PROJECT_BINARY_DIR}/shuffle.txt" COPYONLY)
 
 
