@@ -40,16 +40,6 @@ void read_data(std::istream &is, std::vector<int> &v)
 	}
 }
 
-void test_vector(const std::vector<int> &v)
-{
-	int cnt = 0;
-	for(auto it = v.begin() + 1; it != v.end(); it++)
-	{
-		if(*it < *(it-1)) cnt++;
-	}
-	if(cnt) std::cout << "array is NOT sorted\n";
-	else std::cout << "array is sorted" << std::endl;
-}
 
 int main(int argc, char const *argv[])
 {
@@ -74,7 +64,6 @@ int main(int argc, char const *argv[])
 	    	{
 	    		std::sort(v.begin(), v.end(), std::less<int>());
 	    	}) << " us\n";
-	    	test_vector(v);
 
 
 	    }
