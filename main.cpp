@@ -8,7 +8,7 @@
 #include <functional>
 #include <fstream>
 
-#include "oa_sort.h"
+#include "heap.h"
 
 // Отсюда
 // https://stackoverflow.com/a/21995693
@@ -50,27 +50,31 @@ int main(int argc, char const *argv[])
 
 		std::vector<int> v;
 		std::ifstream fs;
- 	    fs.open(argv[1], std::ios::in);
+		fs.open(argv[1], std::ios::in);
  
-	    if(fs.is_open())
-	    {
-	    	read_data(fs, v);
-	    	fs.close();
+		if(fs.is_open())
+		{
+			read_data(fs, v);
+			fs.close();
 
-	    	fs.open(argv[1]);
-	    	read_data(fs, v);
-	    	fs.close();
-	    	std::cout << "std::sort: " << measure<std::chrono::microseconds>::execution([&]()
-	    	{
-	    		std::sort(v.begin(), v.end(), std::less<int>());
-	    	}) << " us\n";
+			otusalg::heap<int> h;
+			h.buildHeap(v.begin(), v.end());
+			std::ofstream fos("out_1.dot");
+			h.printHeap_dot(fos);
+			fos.close();
 
+			int rm = v.size() / 3;
+			h.remove(rm);
+			std::cout << "removed item " << rm << std::endl;
+			fos.open("out_2.dot");
+			h.printHeap_dot(fos);
+			fos.close();
 
-	    }
-	    else
-	    {
-	    	std::cout << "File '" << argv[1] << "' does not exist" << std::endl;
-	    }
+		}
+		else
+		{
+			std::cout << "File '" << argv[1] << "' does not exist" << std::endl;
+		}
 	}
 
 	return 0;

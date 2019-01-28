@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstddef>
 #include <cmath>
-
+#include <iostream>
 
 namespace otusalg
 {
@@ -15,8 +15,16 @@ class heap
 {
 	std::vector<T> v;
 
+	void _buildHeap()
+	{
+	}
+
 public:
-	heap(){}
+	heap()
+	{
+		// v = std::make_unique(new std::vector<T>);
+	}
+
 	heap(heap &h) = delete;
 	heap(heap &&h) = delete;
 
@@ -50,49 +58,64 @@ public:
 			if(v[l] > v[r])
 				largest = l;
 			else
-				largest = x;
-			if(v[r] > v[largest])
 				largest = r;
-			if(largest != x)
-			{
-				std::swap(v[x], v[largest]);
-				x = largest;
-				l = leftChild(x);
-				r = rightChild(x);
-			}
-			else
+
+			if(v[x] >= v[largest])
 				break;
 
+			std::swap(v[x], v[largest]);
+			x = largest;
+			l = leftChild(x);
+			r = rightChild(x);
 		}
 	}
 
 
-	void buildHeap(std::iterator first, std::iterator last)
+	template<typename Iter>
+	void buildHeap(Iter first, Iter last)
 	{
-		
+		static_assert(std::is_same<typename std::iterator_traits<Iter>::value_type, T>::value, "Test");
+
+		v.clear();
+		std::copy(first, last, std::back_inserter(v));
+
+		for(int i=((v.size() -1) / 2); i>=0; i--)
+		{
+			drown(i);
+		}
 	}
 
-}
+
+	void remove(int idx)
+	{
+		std::swap(v[idx], v[v.size()-1]);
+		v.erase(v.end()-1);
+		drown(idx);
+	}
+
+
+	void printHeap_dot(std::ostream &out)
+	{
+		int l;
+		int r;
+
+		out << "digraph g {\n";
+		for(int i=0; i<v.size(); i++)
+		{
+			out << "\"" << v[i] << "\";\n";
+			l = leftChild(i);
+			r = rightChild(i);
+			if(l < v.size())
+				out << "\"" << v[i] << "\" -> \"" << v[l] << "\";\n";
+			if(r < v.size())
+				out << "\"" << v[i] << "\" -> \"" << v[r] << "\";\n";
+		}
+		out << "}\n";
+	}
+
+};
 
 
 
 } // namespace otusalg
 
-1  Drown(Heap, i, size):  // (Пирамида, индекс, ограничения на массив)
-2      l := Left(i)
-3      r := Right(i)
-4      if l ≤ size and Heap[l] > Heap[r]  // первая проверка - выход за пределы
-5          largest := l
-6      else 
-7          largest := i   
-8      if r ≤ size and Heap[r] > Heap[largest]
-9          largest := r
-10     if largest != i
-11         Swap(Heap, i, largest)
-12         Drown(Heap, largest, size)  // рекурсия
-
-
-
-1  BuildHeap(Array):
-2      for i := Floor((length(Array) - 1) / 2) downto 0
-3          Drown(Array, i, size)
