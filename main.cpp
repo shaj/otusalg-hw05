@@ -58,13 +58,19 @@ int main(int argc, char const *argv[])
 			fs.close();
 
 			otusalg::heap<int> h;
-			h.buildHeap(v.begin(), v.end());
+			std::cout << "buildHeap: " << measure<std::chrono::microseconds>::execution([&]()
+				{
+					h.buildHeap(v.begin(), v.end());
+				}) << " us\n";
 			std::ofstream fos("out_1.dot");
 			h.printHeap_dot(fos);
 			fos.close();
 
 			int rm = v.size() / 3;
-			h.remove(rm);
+			std::cout << "remove: " << measure<std::chrono::microseconds>::execution([&]()
+				{
+					h.remove(rm);
+				}) << " us\n";
 			std::cout << "removed item " << rm << std::endl;
 			fos.open("out_2.dot");
 			h.printHeap_dot(fos);

@@ -74,7 +74,7 @@ public:
 	template<typename Iter>
 	void buildHeap(Iter first, Iter last)
 	{
-		static_assert(std::is_same<typename std::iterator_traits<Iter>::value_type, T>::value, "Test");
+		static_assert(std::is_same<typename std::iterator_traits<Iter>::value_type, T>::value, "Wrong iterator value type");
 
 		v.clear();
 		std::copy(first, last, std::back_inserter(v));
@@ -88,9 +88,12 @@ public:
 
 	void remove(int idx)
 	{
-		std::swap(v[idx], v[v.size()-1]);
-		v.erase(v.end()-1);
-		drown(idx);
+		if(idx < v.size())
+		{
+			std::swap(v[idx], v[v.size()-1]);
+			v.erase(v.end()-1);
+			drown(idx);
+		}
 	}
 
 
