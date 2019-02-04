@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include "heap.h"
+#include "generators.h"
 
 // Отсюда
 // https://stackoverflow.com/a/21995693
@@ -44,43 +45,55 @@ void read_data(std::istream &is, std::vector<int> &v)
 int main(int argc, char const *argv[])
 {
 
-	if(argc > 1)
+
 	{
-		std::cout << "'" << argv[1] << "'\n";
+		std::vector<int> vec;
 
-		std::vector<int> v;
-		std::ifstream fs;
-		fs.open(argv[1], std::ios::in);
- 
-		if(fs.is_open())
-		{
-			read_data(fs, v);
-			fs.close();
+		otusalg::gen_type1(18, vec);
+		otusalg::heap<int> h;
+		h.buildHeap(vec.begin(), vec.end());
+		std::cout << "Из последовательности:\n";
+		std::copy(vec.begin(), vec.end(), std::ostream_iterator<int>(std::cout, " "));
+		std::cout << "\nсгенерирована куча. Структура записана в файл 'out1.dot'" << std::endl;
 
-			otusalg::heap<int> h;
-			std::cout << "buildHeap: " << measure<std::chrono::microseconds>::execution([&]()
-				{
-					h.buildHeap(v.begin(), v.end());
-				}) << " us\n";
-			std::ofstream fos("out_1.dot");
-			h.printHeap_dot(fos);
-			fos.close();
+		std::ofstream fos("out1.dot");
+		h.printHeap_dot(fos);
+		fos.close();
 
-			int rm = v.size() / 3;
-			std::cout << "remove: " << measure<std::chrono::microseconds>::execution([&]()
-				{
-					h.remove(rm);
-				}) << " us\n";
-			std::cout << "removed item " << rm << std::endl;
-			fos.open("out_2.dot");
-			h.printHeap_dot(fos);
-			fos.close();
+		std::cout << "После удаления элемента 4, структура записана в файл 'out2.dot'\n" << std::endl;
+		h.remove(4);
 
-		}
-		else
-		{
-			std::cout << "File '" << argv[1] << "' does not exist" << std::endl;
-		}
+		fos.open("out2.dot");
+		h.printHeap_dot(fos);
+		fos.close();
+
+		auto vvv = h.getSorted();
+		std::cout << "Отсортировано:\n";
+		std::copy(vvv.begin(), vvv.end(), std::ostream_iterator<int>(std::cout, " "));
+		std::cout << std::endl;
+
+		vvv = h.getSorted();
+		std::cout << "Отсортировано:\n";
+		std::copy(vvv.begin(), vvv.end(), std::ostream_iterator<int>(std::cout, " "));
+		std::cout << std::endl;
+	}
+
+
+	{
+		std::vector<int> vec;
+		otusalg::heap<int> h;
+
+		otusalg::gen_type1(32768, vec);
+		std::cout << "Для перемешанной последовательности из 32768 куча построена за " << measure<std::chrono::microseconds>::execution([&]()
+			{
+				h.buildHeap(vec.begin(), vec.end());
+			}) << " us\n";
+
+		otusalg::gen_type1(1048576, vec);
+		std::cout << "Для перемешанной последовательности из 1048576 куча построена за " << measure<std::chrono::microseconds>::execution([&]()
+			{
+				h.buildHeap(vec.begin(), vec.end());
+			}) << " us\n";
 	}
 
 	return 0;

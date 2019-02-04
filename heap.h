@@ -13,11 +13,8 @@ namespace otusalg
 template<typename T>
 class heap
 {
+private:
 	std::vector<T> v;
-
-	void _buildHeap()
-	{
-	}
 
 public:
 	heap()
@@ -88,13 +85,32 @@ public:
 
 	void remove(int idx)
 	{
-		if(idx < v.size())
+		if(idx < v.size()-1)
 		{
 			std::swap(v[idx], v[v.size()-1]);
-			v.erase(v.end()-1);
+			v.pop_back();
 			drown(idx);
 		}
+		else if(v.size() == 1)
+			v.pop_back();
 	}
+
+
+	std::vector<T> getSorted()
+	{
+		std::vector<T> cpy(v.begin(), v.end());
+		std::vector<T> res(v.size());
+
+		while(v.size() > 0)
+		{
+			res.push_back(v[0]);
+			remove(0);
+		}
+
+		v = std::move(cpy);
+		return res;
+	}
+
 
 
 	void printHeap_dot(std::ostream &out)
