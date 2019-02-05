@@ -75,13 +75,14 @@ int main(int argc, char const *argv[])
 		vvv = h.getSorted();
 		std::cout << "Отсортировано:\n";
 		std::copy(vvv.begin(), vvv.end(), std::ostream_iterator<int>(std::cout, " "));
-		std::cout << std::endl;
+		std::cout << "\n" << std::endl;
 	}
 
 
 	{
 		std::vector<int> vec;
 		otusalg::heap<int> h;
+		std::vector<int> vvv;
 
 		otusalg::gen_type1(32768, vec);
 		std::cout << "Для перемешанной последовательности из 32768 куча построена за " << measure<std::chrono::microseconds>::execution([&]()
@@ -89,11 +90,27 @@ int main(int argc, char const *argv[])
 				h.buildHeap(vec.begin(), vec.end());
 			}) << " us\n";
 
+		std::cout << "Сортировка " << measure<std::chrono::microseconds>::execution([&]()
+			{
+				vvv = std::move(h.getSorted());
+			}) << " us\n";
+		if(std::is_sorted(vvv.begin(), vvv.end(), std::greater<int>())) std::cout << "vector sorted\n";
+		else std::cout << "vector NOT sorted\n";
+		std::cout << std::endl;
+
 		otusalg::gen_type1(1048576, vec);
 		std::cout << "Для перемешанной последовательности из 1048576 куча построена за " << measure<std::chrono::microseconds>::execution([&]()
 			{
 				h.buildHeap(vec.begin(), vec.end());
 			}) << " us\n";
+
+		std::cout << "Сортировка " << measure<std::chrono::microseconds>::execution([&]()
+			{
+				vvv = std::move(h.getSorted());
+			}) << " us\n";
+		if(std::is_sorted(vvv.begin(), vvv.end(), std::greater<int>())) std::cout << "vector sorted\n";
+		else std::cout << "vector NOT sorted\n";
+		std::cout << std::endl;
 	}
 
 	return 0;

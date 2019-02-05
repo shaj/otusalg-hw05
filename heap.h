@@ -46,9 +46,10 @@ public:
 	void drown(int idx)
 	{
 		int x = idx;
-		int largest = 0;
+		int largest = idx;
 		int l = leftChild(x);
 		int r = rightChild(x);
+		T tmp;
 
 		while((l <= v.size()) && (r <= v.size()))
 		{
@@ -60,7 +61,10 @@ public:
 			if(v[x] >= v[largest])
 				break;
 
-			std::swap(v[x], v[largest]);
+			tmp = v[x];
+			v[x] = v[largest];
+			v[largest] = tmp;
+
 			x = largest;
 			l = leftChild(x);
 			r = rightChild(x);
@@ -87,7 +91,7 @@ public:
 	{
 		if(idx < v.size()-1)
 		{
-			std::swap(v[idx], v[v.size()-1]);
+			v[idx] = v[v.size()-1];
 			v.pop_back();
 			drown(idx);
 		}
@@ -100,10 +104,11 @@ public:
 	{
 		std::vector<T> cpy(v.begin(), v.end());
 		std::vector<T> res(v.size());
+		int idx = 0;
 
 		while(v.size() > 0)
 		{
-			res.push_back(v[0]);
+			res[idx++] = v[0];
 			remove(0);
 		}
 
