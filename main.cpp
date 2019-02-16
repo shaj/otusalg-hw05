@@ -80,6 +80,46 @@ int main(int argc, char const *argv[])
 
 
 	{
+		std::cout << "\nПроверка remove\n";
+		std::vector<int> v {
+			100, 
+			90, 
+			50, 
+			89, 88,
+			49, 48, 
+			87, 86, 85, 84, 
+			47, 46, 45, 44, 
+			83, 82, 81, 80, 79, 78, 77, 76, 
+			43, 42, 41, 40, 39, 38, 37, 36, 
+			75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60,
+			35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20,
+			59, 58, 57, 56, 55
+		};
+
+		otusalg::heap<int> h;
+		h.buildHeap(v.begin(), v.end());
+
+		std::ofstream fos;
+
+		fos.open("a1.dot");
+		h.printHeap_dot(fos);
+		fos.close();
+
+		h.remove(27);
+
+		fos.open("a2.dot");
+		h.printHeap_dot(fos);
+		fos.close();
+
+		auto vvv = h.getSorted();
+		if(std::is_sorted(vvv.begin(), vvv.end(), std::greater<int>())) std::cout << "vector sorted\n";
+		else std::cout << "vector NOT sorted\n";
+		std::cout << std::endl;
+
+	}
+
+
+	{
 		std::vector<int> vec;
 		otusalg::heap<int> h;
 		std::vector<int> vvv;

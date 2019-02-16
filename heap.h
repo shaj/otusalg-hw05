@@ -43,12 +43,12 @@ public:
 		return idx * 2 + 2;
 	}
 
-	void drown(int idx)
+	void drown(std::size_t  idx)
 	{
-		int x = idx;
-		int largest = idx;
-		int l = leftChild(x);
-		int r = rightChild(x);
+		std::size_t  x = idx;
+		std::size_t  largest = idx;
+		std::size_t  l = leftChild(x);
+		std::size_t  r = rightChild(x);
 		T tmp;
 
 		while((l <= v.size()) && (r <= v.size()))
@@ -87,13 +87,22 @@ public:
 	}
 
 
-	void remove(int idx)
+	void remove(std::size_t  idx)
 	{
-		if(idx < v.size()-1)
+		if(v.size() == 0) 
+		{
+			return;
+		}
+		else if(idx < v.size()-1)
 		{
 			v[idx] = v[v.size()-1];
 			v.pop_back();
 			drown(idx);
+			while((idx > 0) && (v[idx] > v[parent(idx)]))
+			{
+				idx = parent(idx);
+				drown(idx);
+			}
 		}
 		else if(v.size() == 1)
 			v.pop_back();
